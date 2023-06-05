@@ -1,18 +1,22 @@
-import {Controller, Get, Post,Req} from '@nestjs/common'
+import {Controller, Get, Post,Body, Req} from '@nestjs/common'
 import {Request} from 'express'
+import {CreateCatDto} from './dto/create-cat.dto'
+import { Cat } from './interfaces/cat.interface';
+import { CatsService } from './cats.service';
+
 
 @Controller('cats')
 export class CatController {
 
+    constructor(private catsService: CatsService){}
 
     @Post()
-    createCat(@Req() req: Request): string{
-        console.log(req.url);
-        return 'Here is your cat'
+    async createCat(@Body() createCatDto: CreateCatDto){
+        this.catsService.createCat(createCatDto);
     }
     @Get()
-    getCats(): string{
-        return 'Here are your all the cats';
+    async getCats(): Promise<Cat[]>{
+        return this.catsService.getCats()
     }
 
 
